@@ -2,8 +2,11 @@ import React, { useRef, useContext } from 'react';
 import styles from './styles/NewMessageForm.module.css';
 import { ThemeContext } from '../../ThemeContext.js';
 import ImagePicker from './ImagePicker';
+import RemoveButton from './RemoveButton';
 import EmojiRow from './EmojiRow';
 import detectMobile from '../../utils/detectMobile.js';
+import emojiPickerIcon from './assets/emoji-picker.png';
+
 export const NewMessageForm = ({
   handleSubmit,
   text,
@@ -11,10 +14,12 @@ export const NewMessageForm = ({
   selectedImg,
   setSelectedImg,
   previewImg,
-  setPreviewImg
+  setPreviewImg,
+  resetImage
 }) => {
   const inputRef = useRef(null);
   const [darkMode] = useContext(ThemeContext);
+  const [emojiVisibility, setEmojiVisibility] = React.useState(false);
 
   const wrapperHandler = (e) => {
     inputRef.current.focus();
@@ -27,7 +32,11 @@ export const NewMessageForm = ({
       className={`${styles.sendMessageForm} ${!darkMode && styles.lightsendMessageForm}`}
     >
       <div className={styles.emojiMessageContainer}>
-        {!detectMobile() && <EmojiRow text={text} setText={setText} />}
+        <div
+          className={`${styles.emojiRowContainer} ${!darkMode && styles.lightEmojiRowContainer}`}
+        >
+          {emojiVisibility && !detectMobile() && <EmojiRow text={text} setText={setText} />}
+        </div>
         <div className={styles.msgBtnImgContainer}>
           <input
             ref={inputRef}
@@ -39,6 +48,7 @@ export const NewMessageForm = ({
             value={text}
             autoComplete="off"
           />
+          {selectedImg === '' ? null : <RemoveButton onClick={resetImage} />}
           <div className={styles.buttonImageContainer}>
             <div className={styles.imagePickerContainer}>
               <ImagePicker
@@ -47,6 +57,14 @@ export const NewMessageForm = ({
                 setText={setText}
                 previewImg={previewImg}
                 setPreviewImg={setPreviewImg}
+              />
+            </div>
+            <div className={styles.emojiPickerContainer}>
+              <img
+                className={styles.emojiPickerIcon}
+                src={emojiPickerIcon}
+                alt="emoji-picker"
+                onClick={() => setEmojiVisibility(!emojiVisibility)}
               />
             </div>
             <div

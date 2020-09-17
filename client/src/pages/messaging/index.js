@@ -31,7 +31,7 @@ const Chat = () => {
   const [previewImg, setPreviewImg] = useState(false);
   const [usersInChannel, setUsers] = useState([]);
   const [notificationState, setNotificationState] = useState(false);
-
+  const [deliveredID, setDeliveredID] = useState([]);
   const [darkMode] = useContext(ThemeContext);
 
   const myKeyRef = useRef(null);
@@ -96,7 +96,10 @@ const Chat = () => {
         local: true
       })
     );
+    resetImageHandler();
+  };
 
+  const resetImageHandler = () => {
     setSelectedImg('');
     setPreviewImg(false);
     setText('');
@@ -110,9 +113,7 @@ const Chat = () => {
         alicePublicKey: publicKeyRef.current
       });
 
-      // TODO: need to handle image
-
-      await sendMessage({
+      const { id } = await sendMessage({
         channelID,
         userId,
         image,
@@ -125,6 +126,7 @@ const Chat = () => {
       setMessages((prevMsg) => {
         const { ...message } = prevMsg[index];
         message.local = false;
+        message.id = id;
         prevMsg[index] = message;
         return [...prevMsg];
       });
@@ -148,25 +150,7 @@ const Chat = () => {
   };
 
   const initChat = async () => {
-    // TODO: handle error
-    // const messages = await fetchMessages(pubnub, channelID);
-    //
-    // const formatMessages = messages.map((msg) => {
-    //   const {
-    //     image,
-    //     sender,
-    //     body: { box, nonce }
-    //   } = msg;
-    //
-    //   return {
-    //     encrypted: true,
-    //     encryptionDetail: { box, nonce },
-    //     sender,
-    //     image,
-    //     body: btoa(strToTypedArr(box)) // let's just stringify the array, to decrypt later
-    //   };
-    // });
-    // setMessages(formatMessages);
+    // TODO: restore previous messages from local storage
   };
 
   useEffect(() => {
@@ -188,6 +172,9 @@ const Chat = () => {
         })
       );
     });
+    socket.on('delivered', (id) => {
+      setDeliveredID((prev) => [...prev, id]);
+    });
     // an event to notify that the other person is joined.
     socket.on('on-alice-join', ({ publicKey }) => {
       if (publicKey) {
@@ -205,25 +192,26 @@ const Chat = () => {
       getSetUsers(channelID);
     });
 
+    //handle incoming message
     socket.on('chat-message', (msg) => {
       try {
         const box = strToTypedArr(msg.message.box);
         const nonce = strToTypedArr(msg.message.nonce);
-
         const { msg: _msg } = decryptMsg({
           box,
           nonce,
           mySecretKey: myKeyRef.current.secretKey,
           alicePublicKey: publicKeyRef.current
         });
-
         setMessages((prevMsg) =>
           prevMsg.concat({
             image: msg.image,
             body: _msg,
-            sender: msg.sender
+            sender: msg.sender,
+            id: msg.id
           })
         );
+        socket.emit('received', { channel: msg.channel, sender: msg.sender, id: msg.id });
       } catch (err) {
         console.error(err);
       }
@@ -237,12 +225,14 @@ const Chat = () => {
   }, [channelID]);
 
   const alice = usersInChannel.find((u) => u.uuid !== userId);
-  const messagesFormatted = messages.map(({ body, sender, image, local }, i) => {
+  console.log(messages);
+  const messagesFormatted = messages.map(({ body, sender, image, local, id }, i) => {
     return {
       owner: sender === userId,
       body,
       image,
-      local
+      local,
+      id
     };
   });
 
@@ -254,7 +244,13 @@ const Chat = () => {
         <div className={`${styles.messageBlock} ${!darkMode && styles.lightModeContainer}`}>
           <ScrollWrapper messageCount={messagesFormatted.length}>
             {messagesFormatted.map((message, index) => (
-              <Message key={index} handleSend={handleSend} index={index} message={message} />
+              <Message
+                key={index}
+                handleSend={handleSend}
+                index={index}
+                message={message}
+                deliveredID={deliveredID}
+              />
             ))}
             {!alice && <LinkSharingInstruction link={window.location.href} />}
           </ScrollWrapper>
@@ -267,6 +263,7 @@ const Chat = () => {
           setSelectedImg={setSelectedImg}
           previewImg={previewImg}
           setPreviewImg={setPreviewImg}
+          resetImage={resetImageHandler}
         />
       </div>
       <Notification play={notificationState} audio={notificationAudio} />

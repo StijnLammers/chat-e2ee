@@ -5,7 +5,12 @@ import Image from '../Image';
 
 import { ThemeContext } from '../../ThemeContext.js';
 
-export const Message = ({ handleSend, index, message: { owner, body, image, local } }) => {
+export const Message = ({
+  handleSend,
+  index,
+  message: { owner, body, image, local, id },
+  deliveredID
+}) => {
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
   const sendMessage = useCallback(async () => {
@@ -29,8 +34,7 @@ export const Message = ({ handleSend, index, message: { owner, body, image, loca
   }, []);
 
   const [darkMode] = useContext(ThemeContext);
-  // const regex = /\bdata:image\b/g;
-  // const isImg = body.match(regex);
+
   return (
     <div className={owner === true ? styles.messageRight : styles.messageLeft}>
       <div className={styles.messageInfo}>
@@ -46,6 +50,9 @@ export const Message = ({ handleSend, index, message: { owner, body, image, loca
               Try again
             </div>
           </div>
+        )}
+        {deliveredID.includes(id) && (
+          <div className={styles.messageDelivered}>Delivered&nbsp;&#10004;</div>
         )}
       </div>
     </div>

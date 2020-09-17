@@ -35,6 +35,12 @@ const connectionListener = (socket, io) => {
     }
   });
 
+  socket.on('received', ({ channel, sender, id }) => {
+    const { sid } = clients.getSenderByChannel(channel, sender);
+    const senderSocket = io.sockets.sockets[sid];
+    senderSocket.emit('delivered', id);
+  });
+
   socket.on('disconnect', () => {
     const { channelID, userID } = socket;
     if (!(channelID && userID)) {

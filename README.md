@@ -12,6 +12,15 @@ https://chate2ee.fun
 
 This app will allow two mutually agreed users to have a chat in _end-to-end_ encrypted environment. The app itself doesn't track you or ask any infromation from you. Data is owned by **only you** and **only while chatting**. Your private key is generated on your device and never leaves your device. This is not a replacement of your usual chat application.
 
+## Features
+
+1. The end users are **not tracable**.
+2. Data is **not** stored on any remote server.
+3. Secure image sharing. [Read more](https://github.com/muke1908/chat-e2ee/wiki/Idea:-Secure-image-sharing)  
+   **IMPORTANT:** The image sharing feature is imcomplete!! Images are stored to [imagebb](https://mukesh-biswas.imgbb.com/) server. (27/08/2020)
+4. **No history** i.e. once chat is closed the data is not recoverable.
+5. **Zero** information sharing -- no login/signup.
+
 ---
 
 ![Open Source Love](https://img.shields.io/badge/Open%20Source-with%20love-CRIMSON.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/muke1908/chat-e2ee) [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=com.lapots.breed.judge:judge-rule-engine&metric=alert_status)](https://sonarcloud.io/dashboard?id=muke1908_chat-e2ee) [![](https://img.shields.io/github/issues/muke1908/chat-e2ee?style=flat)](https://github.com/muke1908/chat-e2ee/issues)
@@ -29,15 +38,6 @@ For installation instruction, go to [developer section](https://github.com/muke1
 [![](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/images/0)](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/links/0)[![](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/images/1)](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/links/1)[![](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/images/2)](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/links/2)[![](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/images/3)](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/links/3)[![](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/images/4)](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/links/4)[![](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/images/5)](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/links/5)[![](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/images/6)](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/links/6)[![](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/images/7)](https://sourcerer.io/fame/muke1908/muke1908/chat-e2ee/links/7)
 
 ---
-
-### Key Features
-
-1. The end users are not tracable.
-2. Data is not stored on any remote server.
-3. Secure image sharing. [Read more](https://github.com/muke1908/chat-e2ee/wiki/Idea:-Secure-image-sharing)  
-   **IMPORTANT:** The image sharing feature is imcomplete!! Images are stored to [imagebb](https://mukesh-biswas.imgbb.com/) server. (27/08/2020)
-4. No saved history i.e. once chat is closed the data is not recoverable.
-5. It doesn't ask any information from you -- no login/signup.
 
 ### How to initiate chat
 
@@ -91,13 +91,14 @@ We also provide a Dockerfile to build and run the docker image. More details can
 - Entry point is `./index.js`
 
 ### APIs
+```endpoint: https://chate2ee.fun/api/<path>```
 
-| url                              | method   | paylod                         | filename                  | description                                   |
+| url                              | method   | payload                         | filename                  | description                                   |
 | -------------------------------- | -------- | ------------------------------ | ------------------------- | --------------------------------------------- |
-| `/api/chat-link`                 | `POST`   | `{token}`                      | `/api/index.js`           | to generate unique link to start chat session |
-| `/api/chat-link/status/:channel` | `GET`    |                                | `/api/index.js`           | to check if a channel is valid                |
-| `/api/chat/message`              | `POST`   | `{ channel, sender, message }` | `/api/messaging/index.js` | to send a message to a specific channel       |
-| `/api/chat-link/:channel`        | `DELETE` |                                | `/api/index.js`           | to delete a channel                           |
+| `/chat-link`                 | `POST`   | `{token}`                      | `/api/index.js`           | to generate unique link to start chat session |
+| `/chat-link/status/:channel` | `GET`    |                                | `/api/index.js`           | to check if a channel is valid                |
+| `/chat/message`              | `POST`   | `{ channel, sender, message }` | `/api/messaging/index.js` | to send a message to a specific channel       |
+| `/chat-link/:channel`        | `DELETE` |                                | `/api/index.js`           | to delete a channel                           |
 
 ---
 
@@ -144,12 +145,14 @@ Example:
   <tr>
     <td align="center"><a href="https://github.com/drmartell"><img src="https://avatars3.githubusercontent.com/u/49651717?v=4" width="80px;" alt=""/><br /><sub><b>drmartell</b></sub></a><br /><a href="https://github.com/muke1908/chat-e2ee/commits?author=drmartell" title="Code">💻</a></td>
     <td align="center"><a href="https://Narasimha1997.github.io"><img src="https://avatars2.githubusercontent.com/u/20423357?v=4" width="80px;" alt=""/><br /><sub><b>Narasimha Prasanna HN</b></sub></a><br /><a href="#infra-Narasimha1997" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+    <td align="center"><a href="https://github.com/loneWarrior581"><img src="https://avatars2.githubusercontent.com/u/67538935?v=4" width="80px;" alt=""/><br /><sub><b>Uttkarsh singh</b></sub></a><br /><a href="https://github.com/muke1908/chat-e2ee/commits?author=loneWarrior581" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Ryuuko"><img src="https://avatars2.githubusercontent.com/u/25223617?v=4" width="80px;" alt=""/><br /><sub><b>Tat Cheong Chu</b></sub></a><br /><a href="https://github.com/muke1908/chat-e2ee/commits?author=Ryuuko" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/salonigoyal2309"><img src="https://avatars3.githubusercontent.com/u/48411357?v=4" width="80px;" alt=""/><br /><sub><b>Saloni Goyal</b></sub></a><br /><a href="https://github.com/muke1908/chat-e2ee/commits?author=salonigoyal2309" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 > This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
